@@ -27,8 +27,10 @@ jobs:
           server: jedidah.vudse26.cloud
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: /public_html/
+          server-dir: public_html/
+          local-dir: ./
           exclude: |
-            .git*
-            tests/
+            .git/**
+            .github/**
+            tests/**
             .gitignore
