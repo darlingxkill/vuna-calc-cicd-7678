@@ -1,73 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Calculator</title>
-  <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
-  <link rel="stylesheet" href="assets/css/styles.css">
+  <title>VUNA Calculator</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { min-height: 100vh; display: flex; align-items: center; justify-content: center; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: linear-gradient(135deg, #fef0f3, #fce4ec, #f8d4e0, #f2c4d2); }
+    .calc-wrap { width: 100%; max-width: 380px; padding: 16px; }
+    .header { text-align: center; margin-bottom: 16px; }
+    .header h4 { color: #5c3d4a; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; font-size: 1.1rem; }
+    .header p { color: #8a6b78; font-size: .8rem; font-style: italic; }
+    .card { background: rgba(255,255,255,0.78); backdrop-filter: blur(16px); border-radius: 24px; box-shadow: 0 16px 48px rgba(200,120,150,0.18); padding: 24px; border: 1px solid rgba(255,200,210,0.35); }
+    .display { background: rgba(255,255,255,0.6); border-radius: 16px; padding: 16px 20px; margin-bottom: 20px; box-shadow: inset 0 2px 6px rgba(200,120,150,0.08); }
+    #result { width: 100%; text-align: right; font-size: 34px; font-weight: 600; border: none; background: transparent; color: #4a2a38; outline: none; box-shadow: none; }
+    .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .grid button { height: 60px; border-radius: 14px; font-size: 20px; font-weight: 600; border: none; cursor: pointer; transition: all .15s ease; display: flex; align-items: center; justify-content: center; }
+    .grid button:active { transform: scale(0.93); }
+    .num { background: #fff; color: #4a2a38; box-shadow: 0 2px 8px rgba(200,120,150,0.08); }
+    .num:hover { background: #fef0f3; }
+    .op { background: #eec0d0; color: #8a3858; box-shadow: 0 2px 8px rgba(200,120,150,0.1); }
+    .op:hover { background: #e6b0c4; }
+    .util { background: #f8dce6; color: #a04868; box-shadow: 0 2px 8px rgba(200,120,150,0.08); }
+    .util:hover { background: #f0ccda; }
+    .eq { background: linear-gradient(135deg, #e892a8, #d47a94); color: #fff; box-shadow: 0 4px 14px rgba(200,100,130,0.3); }
+    .eq:hover { background: linear-gradient(135deg, #d47a94, #c06884); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(200,100,130,0.35); }
+  </style>
 </head>
-
 <body>
-  <button class="btn btn-outline-secondary theme-toggle-btn" id="theme-toggle" onclick="toggleTheme()"
-    title="Toggle dark/light mode">
-    🌙
-  </button>
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-6 col-md-6 col-sm-8">
-        <div class="border border-dotted border-3 rounded-3 p-3 mb-4 bg-white bg-opacity-50">
-          <h4 class="text-center group-header mb-0">VUNA CALCULATOR</h4>
-          <p class="text-center text-small text-muted">
-            <i>Created by set 2025/26 Software Engineering</i>
-          </p>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <div class="card calculator-card">
-              <div class="card-body p-4">
-                <div class="calculator">
-                  <div class="display-container">
-                    <input type="text" class="form-control" id="result" placeholder="0" disabled />
-                  </div>
-
-                  <div class="btn-grid">
-                    <button class="btn btn-action" onclick="clearResult()">AC</button>
-                    <button class="btn btn-light" onclick="backspace()">CE</button>
-
-                    <button class="btn btn-light" onclick="appendToResult(7)">7</button>
-                    <button class="btn btn-light" onclick="appendToResult(8)">8</button>
-                    <button class="btn btn-light" onclick="appendToResult(9)">9</button>
-                    <button class="btn btn-operator" onclick="operatorToResult('/')">÷</button>
-
-                    <button class="btn btn-light" onclick="appendToResult(4)">4</button>
-                    <button class="btn btn-light" onclick="appendToResult(5)">5</button>
-                    <button class="btn btn-light" onclick="appendToResult(6)">6</button>
-                    <button class="btn btn-operator" onclick="operatorToResult('*')">×</button>
-
-                    <button class="btn btn-light" onclick="appendToResult(1)">1</button>
-                    <button class="btn btn-light" onclick="appendToResult(2)">2</button>
-                    <button class="btn btn-light" onclick="appendToResult(3)">3</button>
-                    <button class="btn btn-operator" onclick="operatorToResult('-')">−</button>
-
-                    <button class="btn btn-light" onclick="appendToResult('.')">.</button>
-                    <button class="btn btn-light" onclick="appendToResult(0)">0</button>
-                    <button class="btn btn-operator" onclick="appendPi()">π</button>
-                    <button class="btn btn-operator" onclick="operatorToResult('+')">+</button>
-                    <button class="btn btn-equals" onclick="calculateResult()" style="grid-column: span 4;">=</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <script src="assets/js/bootstrap.min.js"></script>
-          <script src="assets/js/script.js"></script>
-        </div>
+  <div class="calc-wrap">
+    <div class="header">
+      <h4>VUNA Calculator</h4>
+      <p>Created by set 2025/26 Software Engineering</p>
+    </div>
+    <div class="card">
+      <div class="display">
+        <input type="text" id="result" placeholder="0" readonly />
+      </div>
+      <div class="grid">
+        <button class="num" onclick="appendToResult(7)">7</button>
+        <button class="num" onclick="appendToResult(8)">8</button>
+        <button class="num" onclick="appendToResult(9)">9</button>
+        <button class="op" onclick="operatorToResult('/')">÷</button>
+        <button class="num" onclick="appendToResult(4)">4</button>
+        <button class="num" onclick="appendToResult(5)">5</button>
+        <button class="num" onclick="appendToResult(6)">6</button>
+        <button class="op" onclick="operatorToResult('*')">×</button>
+        <button class="num" onclick="appendToResult(1)">1</button>
+        <button class="num" onclick="appendToResult(2)">2</button>
+        <button class="num" onclick="appendToResult(3)">3</button>
+        <button class="op" onclick="operatorToResult('-')">−</button>
+        <button class="num" onclick="appendToResult(0)">0</button>
+        <button class="num" onclick="appendToResult('.')">.</button>
+        <button class="num" onclick="appendPi()">π</button>
+        <button class="op" onclick="operatorToResult('+')">+</button>
+        <button class="util" onclick="clearResult()">AC</button>
+        <button class="util" onclick="backspace()">CE</button>
+        <button class="util" onclick="backspace()">⌫</button>
+        <button class="eq" onclick="calculateResult()">=</button>
       </div>
     </div>
   </div>
+  <script src="assets/js/script.js"></script>
 </body>
-
 </html>
