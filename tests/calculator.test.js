@@ -1,6 +1,6 @@
 function calculateExpression(expression, lastResult) {
   try {
-    let normalizedExpression = expression.replace(/\bans\b/gi, lastResult || 0);
+    let normalizedExpression = expression.replace(/\bans\b/gi, lastResult || 0).replace(/\bpi\b/gi, "Math.PI");
     let result = eval(normalizedExpression);
     if (isNaN(result) || !isFinite(result)) {
       throw new Error();
@@ -45,6 +45,10 @@ assert(calculateExpression("1/0"), "Error", "1 / 0 = Error");
 
 console.log("\nInvalid expressions:");
 assert(calculateExpression("abc"), "Error", "abc = Error");
+
+console.log("\nPi constant:");
+assert(calculateExpression("pi"), Math.PI, "pi = Math.PI");
+assert(calculateExpression("2*pi"), 2 * Math.PI, "2 * pi = " + 2 * Math.PI);
 
 console.log("\nANS / last result memory:");
 assert(calculateExpression("ans", 10), 10, "ans with lastResult=10 = 10");

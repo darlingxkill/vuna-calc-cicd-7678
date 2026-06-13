@@ -52,9 +52,14 @@ function clearResult() {
   updateResult();
 }
 
+function appendPi() {
+  currentExpression += "pi";
+  updateResult();
+}
+
 function calculateExpression(expression) {
   try {
-    let normalizedExpression = expression.replace(/\bans\b/gi, LAST_RESULT);
+    let normalizedExpression = expression.replace(/\bans\b/gi, LAST_RESULT).replace(/\bpi\b/gi, "Math.PI");
     let result = eval(normalizedExpression);
     if (isNaN(result) || !isFinite(result)) {
       throw new Error();
