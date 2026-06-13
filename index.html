@@ -5,26 +5,134 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jedidah — VUNA Calc</title>
   <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
-  <link rel="stylesheet" href="assets/css/styles.css" />
   <style>
-    body { display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
-    .home-card { background: var(--card-bg); backdrop-filter: blur(10px); border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); padding: 3rem 2.5rem; text-align: center; max-width: 480px; border: 1px solid rgba(255,255,255,0.3); }
-    .home-card h1 { font-weight: 700; font-size: 2rem; color: #212529; margin-bottom: .5rem; }
-    .home-card p { color: #6c757d; margin-bottom: 2rem; }
-    .launch-btn { display: inline-block; background: var(--primary-color); color: #fff; padding: .75rem 2.5rem; border-radius: 40px; font-size: 1.1rem; font-weight: 600; text-decoration: none; transition: all .2s ease; box-shadow: 0 6px 16px rgba(13,110,253,0.25); }
-    .launch-btn:hover { background: #0b5ed7; transform: translateY(-2px); color: #fff; box-shadow: 0 10px 24px rgba(13,110,253,0.35); }
-    .footer-text { font-size: .8rem; color: #adb5bd; margin-top: 2rem; }
-    body.dark-mode .home-card h1 { color: #e0e0e0; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { overflow: hidden; height: 100vh; display: flex; align-items: center; justify-content: center; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+    canvas#bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+    .home-card { position: relative; z-index: 1; background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(16px); border-radius: 24px; box-shadow: 0 20px 60px rgba(200, 120, 150, 0.2); padding: 3rem 2.5rem; text-align: center; max-width: 480px; border: 1px solid rgba(255, 200, 210, 0.4); }
+    .home-card h1 { font-weight: 700; font-size: 2rem; color: #5c3d4a; margin-bottom: .5rem; letter-spacing: 1px; }
+    .home-card p { color: #8a6b78; margin-bottom: 2rem; font-size: .95rem; }
+    .launch-btn { display: inline-block; background: linear-gradient(135deg, #f0a8c0, #e892a8); color: #fff; padding: .8rem 2.8rem; border-radius: 40px; font-size: 1.1rem; font-weight: 600; text-decoration: none; transition: all .3s ease; box-shadow: 0 6px 20px rgba(232, 146, 168, 0.4); border: none; }
+    .launch-btn:hover { transform: translateY(-3px) scale(1.02); color: #fff; box-shadow: 0 12px 30px rgba(232, 146, 168, 0.5); }
+    .footer-text { font-size: .8rem; color: #b599a6; margin-top: 2rem; }
   </style>
 </head>
 <body>
-  <div class="container d-flex justify-content-center">
-    <div class="home-card">
-      <h1>VUNA Calculator</h1>
-      <p class="text-muted">SEN 482 — CI/CD Deployment Project<br/>Jedidah</p>
-      <a href="calculator.html" class="launch-btn">Launch Calculator &rarr;</a>
-      <div class="footer-text">Hosted on vudse26.cloud &bull; Auto-deployed via GitHub Actions</div>
-    </div>
+  <canvas id="bg"></canvas>
+  <div class="home-card">
+    <h1>VUNA Calculator</h1>
+    <p class="text-muted">SEN 482 — CI/CD Deployment Project<br/>Jedidah</p>
+    <a href="calculator.html" class="launch-btn">Launch Calculator &rarr;</a>
+    <div class="footer-text">Hosted on vudse26.cloud &bull; Auto-deployed via GitHub Actions</div>
   </div>
+  <script>
+    const canvas = document.getElementById('bg');
+    const ctx = canvas.getContext('2d');
+    let W, H;
+
+    function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const symbols = ['+', '−', '×', '÷', '=', 'π', '∑', '√', '∞', '±', '∫', '∂', '°', '≠', '≈'];
+    const pastels = ['rgba(245,180,195,', 'rgba(240,165,185,', 'rgba(250,200,210,', 'rgba(235,175,190,', 'rgba(255,190,205,'];
+    const pastelSolid = ['#f5b4c3', '#f0a5b9', '#fac8d2', '#ebafbe', '#ffbecd'];
+
+    class SymbolParticle {
+      constructor() { this.reset(true); }
+      reset(init) {
+        this.symbol = symbols[Math.floor(Math.random() * symbols.length)];
+        this.x = Math.random() * W;
+        this.y = init ? Math.random() * H : -30;
+        this.size = 14 + Math.random() * 22;
+        this.speedY = 0.15 + Math.random() * 0.35;
+        this.speedX = (Math.random() - 0.5) * 0.2;
+        this.alpha = 0.15 + Math.random() * 0.25;
+        this.rotate = (Math.random() - 0.5) * 0.02;
+        this.angle = Math.random() * Math.PI * 2;
+        this.color = pastels[Math.floor(Math.random() * pastels.length)];
+        this.pulse = Math.random() * Math.PI * 2;
+        this.pulseSpeed = 0.01 + Math.random() * 0.02;
+      }
+      update(mx, my) {
+        this.y += this.speedY;
+        this.x += this.speedX;
+        this.angle += this.rotate;
+        this.pulse += this.pulseSpeed;
+        const dx = mx - this.x, dy = my - this.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 180) {
+          const force = (180 - dist) / 180 * 0.8;
+          this.x -= dx / dist * force;
+          this.y -= dy / dist * force;
+        }
+        const pulseAlpha = 0.5 + 0.5 * Math.sin(this.pulse);
+        this.currentAlpha = this.alpha * pulseAlpha;
+        if (this.y > H + 40) this.reset(false);
+        if (this.x < -40) this.x = W + 20;
+        if (this.x > W + 40) this.x = -20;
+      }
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle);
+        ctx.font = `${this.size}px "Segoe UI", "Arial Unicode MS", sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = this.color + this.currentAlpha + ')';
+        ctx.fillText(this.symbol, 0, 0);
+        ctx.restore();
+      }
+    }
+
+    const particles = [];
+    const particleCount = 80;
+    for (let i = 0; i < particleCount; i++) particles.push(new SymbolParticle());
+
+    let mouseX = -1000, mouseY = -1000;
+    let targetMX = -1000, targetMY = -1000;
+    document.addEventListener('mousemove', e => { targetMX = e.clientX; targetMY = e.clientY; });
+    document.addEventListener('touchmove', e => { const t = e.touches[0]; targetMX = t.clientX; targetMY = t.clientY; });
+    document.addEventListener('touchend', () => { targetMX = -1000; targetMY = -1000; });
+
+    function drawGradient() {
+      const grad = ctx.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, Math.max(W, H) * 0.8);
+      grad.addColorStop(0, '#fce4ec');
+      grad.addColorStop(0.3, '#f8d0db');
+      grad.addColorStop(0.6, '#f0b8c8');
+      grad.addColorStop(1, '#e8a8b8');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    function drawConnections() {
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 100) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(230,160,180,${0.08 * (1 - dist / 100)})`;
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+          }
+        }
+      }
+    }
+
+    function animate() {
+      mouseX += (targetMX - mouseX) * 0.08;
+      mouseY += (targetMY - mouseY) * 0.08;
+      drawGradient();
+      for (const p of particles) p.update(mouseX, mouseY);
+      drawConnections();
+      for (const p of particles) p.draw();
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
 </body>
 </html>
