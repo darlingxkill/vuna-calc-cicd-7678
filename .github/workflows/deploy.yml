@@ -27,6 +27,9 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
+          port: 22
+          timeout: 30s
+          command_timeout: 10m
           script: |
             rm -rf /home/jedidah.vudse26.cloud/public_html/*
       - name: Deploy to cPanel via SCP
@@ -35,5 +38,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
+          port: 22
+          timeout: 30s
           source: "index.html,calculator.html,assets"
           target: "/home/jedidah.vudse26.cloud/public_html"
