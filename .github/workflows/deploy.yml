@@ -21,24 +21,15 @@ jobs:
       - name: Run unit tests
         run: node tests/calculator.test.js
 
-      - name: Clean remote webroot
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          password: ${{ secrets.SSH_PASSWORD }}
-          port: 22
-          timeout: 30s
-          command_timeout: 10m
-          script: |
-            rm -rf /home/jedidah.vudse26.cloud/public_html/*
-      - name: Deploy to cPanel via SCP
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          password: ${{ secrets.SSH_PASSWORD }}
-          port: 22
-          timeout: 30s
-          source: "index.html,calculator.html,assets"
-          target: "/home/jedidah.vudse26.cloud/public_html"
+      - name: Deploy via FTP
+        run: |
+          lftp -c "
+            open -u ${{ secrets.FTP_USER }},${{ secrets.FTP_PASSWORD }} ${{ secrets.FTP_HOST }}
+            rm -rf /public_html/index.html
+            rm -rf /public_html/calculator.html
+            rm -rf /public_html/assets
+            put index.html -o /public_html/index.html
+            put calculator.html -o /public_html/calculator.html
+            mirror -R --delete --verbose assets/ /public_html/assets/
+            quit
+          "
