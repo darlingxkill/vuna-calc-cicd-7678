@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VUNA Calculator</title>
   <style>
+    .back-link { position: fixed; top: 20px; left: 20px; z-index: 10; text-decoration: none; background: rgba(255,255,255,0.7); backdrop-filter: blur(8px); color: #8a6b78; padding: 8px 18px; border-radius: 40px; font-size: 14px; font-weight: 600; border: 1px solid rgba(255,200,210,0.3); transition: all .2s ease; display: flex; align-items: center; gap: 6px; }
+    .back-link:hover { background: rgba(255,255,255,0.9); color: #5c3d4a; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(200,120,150,0.15); }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { min-height: 100vh; display: flex; align-items: center; justify-content: center; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: linear-gradient(135deg, #fef0f3, #fce4ec, #f8d4e0, #f2c4d2); }
     .calc-wrap { width: 100%; max-width: 380px; padding: 16px; }
@@ -28,6 +30,7 @@
   </style>
 </head>
 <body>
+  <a href="index.html" class="back-link">← Back</a>
   <div class="calc-wrap">
     <div class="header">
       <h4>VUNA Calculator</h4>
