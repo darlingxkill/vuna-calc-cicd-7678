@@ -10,39 +10,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Get your code
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Deploy to server
-      - name: Deploy via SSH and Docker
+      - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
-            echo "🚀 Starting deployment..."
-
-            # go to home directory
             cd ~
-
-            # remove old project if it exists
             rm -rf vuna-calc
-
-            # clone latest version from GitHub
             git clone https://github.com/darlingxkill/vuna-calc-cicd-7678.git vuna-calc
-
             cd vuna-calc
 
-            echo "🐳 Building Docker image..."
             docker build -t vuna-calc .
-
-            echo "🛑 Stopping old container..."
             docker stop vuna-calc || true
             docker rm vuna-calc || true
-
-            echo "▶️ Running new container..."
             docker run -d -p 80:80 --name vuna-calc vuna-calc
-
-            echo "✅ Deployment complete"
