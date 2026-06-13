@@ -7,14 +7,14 @@
   <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { overflow: hidden; height: 100vh; display: flex; align-items: center; justify-content: center; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+    body { overflow: hidden; height: 100vh; display: flex; align-items: center; justify-content: center; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #000; }
     canvas#bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
-    .home-card { position: relative; z-index: 1; background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(16px); border-radius: 24px; box-shadow: 0 20px 60px rgba(200, 120, 150, 0.2); padding: 3rem 2.5rem; text-align: center; max-width: 480px; border: 1px solid rgba(255, 200, 210, 0.4); }
-    .home-card h1 { font-weight: 700; font-size: 2rem; color: #5c3d4a; margin-bottom: .5rem; letter-spacing: 1px; }
-    .home-card p { color: #8a6b78; margin-bottom: 2rem; font-size: .95rem; }
-    .launch-btn { display: inline-block; background: linear-gradient(135deg, #f0a8c0, #e892a8); color: #fff; padding: .8rem 2.8rem; border-radius: 40px; font-size: 1.1rem; font-weight: 600; text-decoration: none; transition: all .3s ease; box-shadow: 0 6px 20px rgba(232, 146, 168, 0.4); border: none; }
-    .launch-btn:hover { transform: translateY(-3px) scale(1.02); color: #fff; box-shadow: 0 12px 30px rgba(232, 146, 168, 0.5); }
-    .footer-text { font-size: .8rem; color: #b599a6; margin-top: 2rem; }
+    .home-card { position: relative; z-index: 1; background: rgba(20, 20, 30, 0.8); backdrop-filter: blur(16px); border-radius: 24px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4); padding: 3rem 2.5rem; text-align: center; max-width: 480px; border: 1px solid rgba(255, 255, 255, 0.08); }
+    .home-card h1 { font-weight: 700; font-size: 2rem; color: #e8e8f0; margin-bottom: .5rem; letter-spacing: 1px; }
+    .home-card p { color: #9898a8; margin-bottom: 2rem; font-size: .95rem; }
+    .launch-btn { display: inline-block; background: linear-gradient(135deg, #5555aa, #4040a0); color: #fff; padding: .8rem 2.8rem; border-radius: 40px; font-size: 1.1rem; font-weight: 600; text-decoration: none; transition: all .3s ease; box-shadow: 0 6px 20px rgba(60, 60, 160, 0.4); border: none; }
+    .launch-btn:hover { transform: translateY(-3px) scale(1.02); color: #fff; box-shadow: 0 12px 30px rgba(60, 60, 160, 0.5); }
+    .footer-text { font-size: .8rem; color: #686878; margin-top: 2rem; }
   </style>
 </head>
 <body>
@@ -35,7 +35,7 @@
     resize();
 
     const symbols = ['+', '−', '×', '÷', '=', 'π', '∑', '√', '∞', '±', '∫', '∂', '°', '≠', '≈'];
-    const colors = ['rgba(180,80,110,', 'rgba(200,90,120,', 'rgba(160,70,100,', 'rgba(190,85,115,', 'rgba(170,75,105,'];
+    const colors = ['rgba(200,200,220,', 'rgba(180,180,210,', 'rgba(160,160,200,', 'rgba(210,210,230,', 'rgba(170,170,215,'];
 
     class SymbolParticle {
       constructor() { this.reset(true); }
@@ -78,7 +78,7 @@
         ctx.font = `${this.size}px "Segoe UI", "Arial Unicode MS", sans-serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.shadowColor = 'rgba(180,80,110,0.3)';
+        ctx.shadowColor = 'rgba(200,200,220,0.2)';
         ctx.shadowBlur = 6;
         ctx.fillStyle = this.color + this.currentAlpha + ')';
         ctx.fillText(this.symbol, 0, 0);
@@ -99,10 +99,9 @@
 
     function drawGradient() {
       const grad = ctx.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, Math.max(W, H) * 0.8);
-      grad.addColorStop(0, '#fef0f3');
-      grad.addColorStop(0.3, '#fce4ec');
-      grad.addColorStop(0.6, '#f8d4e0');
-      grad.addColorStop(1, '#f2c4d2');
+      grad.addColorStop(0, '#1a1a1a');
+      grad.addColorStop(0.5, '#0d0d0d');
+      grad.addColorStop(1, '#000000');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, W, H);
     }
@@ -117,7 +116,7 @@
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(180,80,110,${0.15 * (1 - dist / 100)})`;
+            ctx.strokeStyle = `rgba(200,200,220,${0.08 * (1 - dist / 100)})`;
             ctx.lineWidth = 0.8;
             ctx.stroke();
           }
