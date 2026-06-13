@@ -22,14 +22,14 @@ jobs:
         run: node tests/calculator.test.js
 
       - name: Deploy via FTP
-        run: |
-          lftp -c "
-            open -u ${{ secrets.FTP_USER }},${{ secrets.FTP_PASSWORD }} ${{ secrets.FTP_HOST }}
-            rm -rf /public_html/index.html
-            rm -rf /public_html/calculator.html
-            rm -rf /public_html/assets
-            put index.html -o /public_html/index.html
-            put calculator.html -o /public_html/calculator.html
-            mirror -R --delete --verbose assets/ /public_html/assets/
-            quit
-          "
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: /home/jedidah.vudse26.cloud/public_html/
+          local-dir: ./
+          exclude: |
+            .git*
+            tests/
+            .gitignore
